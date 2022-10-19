@@ -5,23 +5,23 @@
             <li class="nav-item theme-logo" >
                 @cannot('Student')
                     <a href={{route('admin.dashboard')}}>
-                        <img  src= "{{ asset("img/arrow-down.png") }}" class="navbar-logo" alt="logo" style="width: 130px !important;">
+                        <img  src= "{{ asset("img/logo.png") }}" class="navbar-logo" alt="logo" style="width: 130px !important;">
                     </a>
                 @endcannot
                 @can('Student')
                     <a href={{route('student.dashboard')}}>
-                        <img  src= "{{ asset("img/arrow-down.png") }}" class="navbar-logo" alt="logo" style="width: 130px !important;">
+                        <img  src= "{{ asset("img/logo.png") }}" class="navbar-logo" alt="logo" style="width: 130px !important;">
                     </a>
                 @endcan
             </li>
             @cannot('Student')
                 <li class="nav-item theme-text">
-                    <a href="{{route('admin.dashboard')}}" class="nav-link"> Exam</a>
+                    <a href="{{route('admin.dashboard')}}" class="nav-link"> Portal</a>
                 </li>
             @endcannot
             @can('Student')
                 <li class="nav-item theme-text">
-                    <a href="{{route('student.dashboard')}}" class="nav-link"> Exam</a>
+                    <a href="{{route('student.dashboard')}}" class="nav-link"> Portal</a>
                 </li>
             @endcan
         </ul>

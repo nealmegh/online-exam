@@ -16,7 +16,7 @@
     <!--  END NAVBAR  -->
 
     <!--  BEGIN MAIN CONTAINER  -->
-    <div class="main-container" id="container">
+    <div class="main-container" id="container" style="margin-top: -73px;">
 
 {{--        <div class="overlay"></div>--}}
 {{--        <div class="search-overlay"></div>--}}

@@ -42,6 +42,11 @@
 
     </style>
     <style>
+        .btnDiv{
+            position: fixed !important;
+            right:    0 !important;
+            bottom:   0 !important;
+        }
         .hide{
             display:none !important;
         }
@@ -128,7 +133,7 @@
             stroke-dashoffset: 0;
         }
         .btn-radio span {
-            display: inline-block;
+            /*display: inline-block;*/
             vertical-align: middle;
         }
         @media only screen and (min-width: 900px) {
@@ -136,6 +141,20 @@
                 margin-left: 9rem !important;
                 margin-right: 9rem !important;
             }
+        }
+        .nav-pills .nav-link.active, .nav-pills .show > .nav-link {
+            color: #f8e6ae !important;
+            background-color: #fac204 !important;
+        }
+
+
+    </style>
+    <link href="https://fonts.cdnfonts.com/css/there-must-be" rel="stylesheet">
+    <style>
+
+        .custom-head{
+            color: white;
+            font-family: 'There Must Be', sans-serif !Important;
         }
 
     </style>
@@ -161,10 +180,10 @@
         <div class="row layout-top-spacing">
 
             <div class="col-xl-12 col-lg-12 col-md-12 col-12 layout-spacing">
-                <div class="widget widget-content-area br-4">
+                <div class="widget widget-content-area br-4 bg-success">
                     <div class="d-flex justify-content-between">
                         <span></span>
-                        <h1 class="text-center"> SERU TEST</h1>
+                        <h1 class="text-center custom-head"> SERU TEST</h1>
 
                         <div id="countdowntimer"><span id="hm_timer"> </span> </div>
                     </div>
@@ -173,14 +192,14 @@
                 <div>
 
                 </div>
-                <div class="col-xl-12 col-lg-12 col-md-12 col-12 bg-white disable-select" >
+                <div class="col-xl-12 col-lg-12 col-md-12 col-12 disable-select bg-light-warning" >
                     <form id="questionForm" action="store_answers" method="post" onsubmit="makeNull()">
                         @csrf
                         <input type="hidden" name="mock_test_id" value="{{$mockTest->id}}">
                         <input type="hidden" name="user_id" value="{{$user->id}}">
                         <nav>
                             {{--                            <div class="nav nav-tabs mx-lg-5" id="nav-tab" role="tablist">--}}
-                            <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+                            <ul class="nav nav-tabs nav-pills nav-fill" id="pills-tab" role="tablist">
                                 @foreach($questions as $key => $question)
                                     <li class="nav-item ">
                                         <a class="nav-link {{($key == 0)?'active':''}}" id="navtab-Q{{$key+1}}" data-toggle="pill" role="tab" href="#nav-Q{{$key+1}}" data-toggle="tab">{{$key+1}}</a>
@@ -192,10 +211,10 @@
                         </nav>
                         <div class="tab-content" id="nav-tabContent">
                             @foreach($questions as $key => $question)
-                                <div class="tab-pane fade bg-white {{($key == 0)?'active show':''}}" id="nav-Q{{$key+1}}" role="tabpanel" aria-labelledby="navtab-Q{{$key+1}}">
+                                <div class="tab-pane fade bg-yellow-300 {{($key == 0)?'active show':''}}" id="nav-Q{{$key+1}}" role="tabpanel" aria-labelledby="navtab-Q{{$key+1}}" style="min-height: calc(100vh - 314px) !important;">
                                     @if($question->type == 'mcq')
                                         <div class="mx-lg-6 mx-5  mt-5 mb-5">
-                                            <p class="pt-3" style="color: black; font-size: xx-large"> {!!$question->text!!}</p>
+                                            <p class="pt-3" style="color: black; font-size: x-large"> {!!$question->text!!}</p>
                                         </div>
                                         @php
                                             $answers = json_decode($question->answers->text)
@@ -211,7 +230,7 @@
                                                             <path d="M10,7 C8.34314575,7 7,8.34314575 7,10 C7,11.6568542 8.34314575,13 10,13 C11.6568542,13 13,11.6568542 13,10 C13,8.34314575 11.6568542,7 10,7 Z" class="inner"></path>
                                                             <path d="M10,1 L10,1 L10,1 C14.9705627,1 19,5.02943725 19,10 L19,10 L19,10 C19,14.9705627 14.9705627,19 10,19 L10,19 L10,19 C5.02943725,19 1,14.9705627 1,10 L1,10 L1,10 C1,5.02943725 5.02943725,1 10,1 L10,1 Z" class="outer"></path>
                                                         </svg>
-                                                        <span style="font-size: x-large !important;">{{$answer}}</span>
+                                                        <span style="font-size: large !important; color: black">{{$answer}}</span>
                                                     </label>
                                                 </div>
 
@@ -223,9 +242,18 @@
                                     @if($question->type == 'dnd')
                                         @include('Backend.Question.dnd')
                                     @endif
-                                    @if(count($questions) == ($key+1))
-                                        <input id="sendansbutton" class="btn questionsend btn-success float-right" type="submit">
-                                    @endif
+                                    <div class="btnDiv pb-3">
+                                        @if($key == 0)
+                                            <a class="btn btn-primary btnNext float-right">Next</a>
+                                        @elseif(count($questions) == ($key+1))
+                                            <a class="btn btn-danger btnPrevious float-right">Previous</a>
+                                            <input id="sendansbutton" class="btn questionsend btn-success float-right" type="submit">
+                                        @else
+                                            <a class="btn btn-primary btnNext float-right">Next</a>
+                                            <a class="btn btn-danger btnPrevious float-right">Previous</a>
+                                        @endif
+                                    </div>
+
 
                                 </div>
 
@@ -252,12 +280,7 @@
 @section('js-customization')
     <!-- BEGIN PAGE LEVEL CUSTOM SCRIPTS -->
     <script src= {{ asset("js/theme/plugins/perfect-scrollbar/perfect-scrollbar.min.js") }}></script>
-    <script src={{ asset("js/theme/plugins/table/datatable/datatables.js") }}></script>
-    <!-- NOTE TO Use Copy CSV Excel PDF Print Options You Must Include These Files  -->
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/dataTables.buttons.min.js")}}></script>
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/jszip.min.js")}}></script>
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/buttons.html5.min.js")}}></script>
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/buttons.print.min.js")}}></script>
+
 
     <!-- BEGIN THEME GLOBAL STYLE -->
     <script src={{asset("js/theme/js/scrollspyNav.js")}}></script>
@@ -265,100 +288,10 @@
     <script src={{asset("js/theme/plugins/sweetalerts/custom-sweetalert.js")}}></script>
     <!-- END THEME GLOBAL STYLE -->
     <!-- END PAGE LEVEL CUSTOM SCRIPTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src={{asset("js/jQuery.countdownTimer.js")}}></script>
 
-
-    {{--    <script>--}}
-
-    {{--            function dragStart(event) {--}}
-
-    {{--            event.dataTransfer.setData("Text", event.target.id);--}}
-    {{--                var tid = $('#'+event.target.id).data('value');--}}
-
-    {{--            // var test = $(this).closest('.droptarget').attr('data-id');--}}
-    {{--            // console.log(test);--}}
-
-
-    {{--            // let tid = event.target.id;--}}
-    {{--            $("#"+tid).val(' ');--}}
-
-    {{--            // document.getElementById("demo").innerHTML = "Started to drag the p element";--}}
-    {{--        }--}}
-
-    {{--            function allowDrop(event) {--}}
-    {{--            event.preventDefault();--}}
-    {{--        }--}}
-
-    {{--            function drop(event, ui) {--}}
-    {{--            event.preventDefault();--}}
-    {{--            var data = event.dataTransfer.getData("Text");--}}
-    {{--            event.target.appendChild(document.getElementById(data));--}}
-
-    {{--            // console.log(document.getElementById(data).innerText)--}}
-    {{--            let hid = event.target.dataset.id;--}}
-    {{--            $('#'+data).attr('data-value', hid);--}}
-    {{--            if(hid > 999)--}}
-    {{--            {--}}
-    {{--                $("#"+hid).val(document.getElementById(data).innerText);--}}
-    {{--            }--}}
-    {{--            else--}}
-    {{--            {--}}
-    {{--                $("#"+hid).val('');--}}
-    {{--            }--}}
-
-
-
-    {{--            // document.getElementById("demo").innerHTML = "The p element was dropped";--}}
-    {{--        }--}}
-
-    {{--    </script>--}}
-
-    <script>
-        {{--var count = {{$questions[0]->id}};--}}
-        {{--jQuery(".next").click(function(){--}}
-        {{--    var myclass = jQuery(this).parent().parent().attr('id');--}}
-        {{--    console.log(myclass);--}}
-        {{--    jQuery("#"+myclass).addClass( "hide" );--}}
-        {{--    var quesidname = 'question';--}}
-        {{--    count = count + 1;--}}
-        {{--    count1 = count - 1;--}}
-        {{--    jQuery("#"+quesidname+count1).removeClass("show").addClass( "hide" );--}}
-        {{--    jQuery("#"+quesidname+count).addClass( "show" );--}}
-
-        {{--    //$(myclass).addClass('id');--}}
-        {{--    console.log(myclass);--}}
-        {{--});--}}
-
-    </script>
-    {{--    <script>--}}
-    {{--        var timeleft = 10;--}}
-    {{--        var downloadTimer = setInterval(function(){--}}
-    {{--            if(timeleft <= 0){--}}
-    {{--                clearInterval(downloadTimer);--}}
-    {{--            }--}}
-    {{--            document.getElementById("progressBar").value = 10 - timeleft;--}}
-    {{--            timeleft -= 1;--}}
-    {{--        }, 1000);--}}
-    {{--    </script>--}}
-
-    <script>
-        // $('.btnNext').click(function(){
-        //     $('.nav-tabs > .active').next('li').find('a').trigger('click');
-        // });
-        //
-        // $('.btnPrevious').click(function(){
-        //     $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-        // });
-        $('.btnNext').click(function() {
-            $('.nav-tabs .active').parent().next('li').find('a').trigger('click');
-        });
-
-        $('.btnPrevious').click(function() {
-            $('.nav-tabs .active').parent().prev('li').find('a').trigger('click');
-        });
-    </script>
     <script>
         $(function(){
             $("#hm_timer").countdowntimer({
@@ -380,13 +313,16 @@
 
             event.dataTransfer.setData("Text", event.target.id);
             var tid = $('#'+event.target.id).data('value');
+            var target = event.target;
+            var parent = target.parentElement;
 
-            // var test = $(this).closest('.droptarget').attr('data-id');
-            // console.log(test);
+            // parent.classList.add("droptargetEnd");
+            console.log(tid);
 
 
             // let tid = event.target.id;
             $("#"+tid).val(' ');
+            // parent.classList.remove("droptargetEnd");
 
             // document.getElementById("demo").innerHTML = "Started to drag the p element";
         }
@@ -399,12 +335,16 @@
             event.preventDefault();
             var data = event.dataTransfer.getData("Text");
             event.target.appendChild(document.getElementById(data));
-
-            // console.log(document.getElementById(data).innerText)
+            let child = document.getElementById(data);
+            let parent = child?.parentElement;
+            // parent.classList.remove("droptargetEnd");
+            // parent.classList.add("droptargetEnd");
+            // console.log( child?.parentElement)
             let hid = event.target.dataset.id;
             $('#'+data).attr('data-value', hid);
             if(hid > 999)
             {
+                // console.log(document.getElementById(data))
                 $("#"+hid).val(document.getElementById(data).innerText);
             }
             else
@@ -412,10 +352,12 @@
                 $("#"+hid).val('');
             }
 
-
+            // var element = document.getElementById("data");
+            // element.classList.remove("droptargetEnd");
 
             // document.getElementById("demo").innerHTML = "The p element was dropped";
         }
+
 
     </script>
     <script>
@@ -425,6 +367,17 @@
             $("#hiddenQ"+Qid).attr('disabled', true);
         }
 
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('.btnNext').click(function() {
+                $('.nav-tabs .active').parent().next('li').find('a').trigger('click')
+            });
+
+            $('.btnPrevious').click(function() {
+                $('.nav-tabs .active').parent().prev('li').find('a').trigger('click');
+            });
+        });
     </script>
 
 @endsection

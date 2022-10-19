@@ -43,6 +43,11 @@
         }
     </style>
     <style>
+        .btnDiv{
+            position: fixed !important;
+            right:    0 !important;
+            bottom:   0 !important;
+        }
         .hide{
             display:none !important;
         }
@@ -129,7 +134,7 @@
             stroke-dashoffset: 0;
         }
         .btn-radio span {
-            display: inline-block;
+            /*display: inline-block;*/
             vertical-align: middle;
         }
         @media only screen and (min-width: 900px) {
@@ -160,7 +165,7 @@
         //$dAnswers = json_decode($question->answers->text);
     @endphp
 
-    <div class="layout-px-spacing">
+<div class="layout-px-spacing" style="min-height: calc(100vh - 100px) !important;">
 
         <div class="row layout-top-spacing">
 
@@ -170,34 +175,34 @@
                         <span></span>
                         <h1 class="text-center"> SERU TEST</h1>
 
-                        <div id="countdowntimer"><span id="hm_timer"> </span> </div>
+{{--                        <div id="countdowntimer"><span id="hm_timer"> </span> </div>--}}
                     </div>
 
                 </div>
                 <div>
 
                 </div>
-                <div class="col-xl-12 col-lg-12 col-md-12 col-12 bg-white" >
+                <div class="col-xl-12 col-lg-12 col-md-12 col-12 bg-white">
 {{--                    <form id="questionForm" action="store_answers" method="post" >--}}
 {{--                        @csrf--}}
 {{--                        <input type="hidden" name="mock_test_id" value="{{$mockTest->id}}">--}}
 {{--                        <input type="hidden" name="user_id" value="{{$user->id}}">--}}
                         <nav>
                             {{--                            <div class="nav nav-tabs mx-lg-5" id="nav-tab" role="tablist">--}}
-                            <ul class="nav nav-pills nav-fill" id="pills-tab" role="tablist">
+                            <ul class="nav nav-tabs nav-pills nav-fill" id="pills-tab" role="tablist">
                                 @foreach($mockTest->mockTestItems as $key => $question)
-                                    <li class="nav-item ">
-                                        <a class="nav-link {{($key == 0)?'active':''}}" id="navtab-Q{{$key+1}}" data-toggle="pill" role="tab" href="#nav-Q{{$key+1}}" data-toggle="tab">{{$key+1}}</a>
+                                    <li class="nav-item">
+                                        <a class="nav-link {{($key == 0)?'active':''}}" id="navtab{{$key+1}}" role="tab" href="#nav-Q{{$key+1}}" data-toggle="tab" aria-controls="nav-Q{{$key+1}}" aria-selected="true">{{$key+1}}</a>
                                     </li>
                                     {{--                                    <button class="nav-link" href="#nav-Q{{$key+1}}" {{($key == 0)?'active':''}}" style="background-color: green" id="navtab-Q{{$key+1}}" data-toggle="tab" data-target="#nav-Q{{$key+1}}" type="button" role="tab" aria-controls="nav-Q{{$key+1}}" aria-selected="false">{{$key+1}}</button>--}}
                                 @endforeach
                             </ul>
                             {{--                            </div>--}}
                         </nav>
-                        <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-content" id="nav-tabContent" >
                             @foreach($mockTest->mockTestItems as $key => $question)
                                 @if($question->type == 'mcq')
-                                <div class="bipon-h tab-pane fade bg-white {{($key == 0)?'active show':''}}" id="nav-Q{{$key+1}}" role="tabpanel" aria-labelledby="navtab-Q{{$key+1}}">
+                                <div class="bipon-h tab-pane fade bg-white {{($key == 0)?'active show':''}}" id="nav-Q{{$key+1}}" role="tabpanel" aria-labelledby="navtab{{$key+1}}" style="min-height: calc(100vh - 300px) !important;">
                                     <div class="mx-lg-6 mx-5  mt-5">
                                         <p class="pt-3" style="color: black; font-size: xx-large"> {{$question->text}}</p>
                                     </div>
@@ -244,10 +249,18 @@
                                             @endif
                                         @endforeach
                                     </div>
-                                    {{--                                    {{dd(count($questions), $key)}}--}}
-{{--                                    @if(count($questions) == ($key+1))--}}
+                                <div class="btnDiv pb-3">
+                                    @if($key == 0)
+                                        <a class="btn btn-success btnNext float-right">Next</a>
+                                    @elseif(count($mockTest->mockTestItems)== $key-1)
+                                        <a class="btn btn-danger btnPrevious float-right">Previous</a>
+                                    @else
+                                        <a class="btn btn-danger btnPrevious float-right">Previous</a>
+                                        <a class="btn btn-success btnNext float-right">Next</a>
+                                    @endif
+                                    <a href="{{route('student.dashboard')}}" class="btn btn-primary float-right" > Dashboard</a>
+                                </div>
 
-{{--                                    @endif--}}
                                 </div>
                             @elseif($question->type == 'dnd')
                                     @php
@@ -255,52 +268,67 @@
                                         $dAnswers = json_decode($question->user_answer);
                                         $dCAnswers = json_decode($question->correct_answer);
                                     @endphp
-                                    <div class="bipon-h tab-pane fade bg-white {{($key == 0)?'active show':''}}" id="nav-Q{{$key+1}}" role="tabpanel" aria-labelledby="navtab-Q{{$key+1}}">
-                                        <span style="font-size: x-large!important;"> Your Answer</span>
-                                        <p style="font-size: xx-large!important;">
-                                           @foreach($dQuestions as $keyDND => $dQuestion)
-{{--                                               {{dd($dAnswers[$keyDND])}}--}}
-                                               @if ($keyDND !== array_key_last($dQuestions))
-                                                    @if($dAnswers[$keyDND] == $dCAnswers[$keyDND])
-                                                         {!! $dQuestion !!}<span style="color: green">{!! ' '.$dAnswers[$keyDND] !!}</span>
-                                                       <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#c8e6c9" d="M36,42H12c-3.314,0-6-2.686-6-6V12c0-3.314,2.686-6,6-6h24c3.314,0,6,2.686,6,6v24C42,39.314,39.314,42,36,42z"/><path fill="#4caf50" d="M34.585 14.586L21.014 28.172 15.413 22.584 12.587 25.416 21.019 33.828 37.415 17.414z"/></svg>
+                                    <div class="bipon-h tab-pane fade bg-white {{($key == 0)?'active show':''}}" id="nav-Q{{$key+1}}" role="tabpanel" aria-labelledby="navtab{{$key+1}}" style="min-height: calc(100vh - 304px) !important;">
+                                        <div class="pb-3 mx-lg-6 mx-5  mt-5">
+                                            <span style="font-size: x-large!important;"> Your Answer</span>
+                                                <p style="font-size: xx-large!important;">
+                                               @foreach($dQuestions as $keyDND => $dQuestion)
+    {{--                                               {{dd($dAnswers)}}--}}
+                                                    @if ( $dAnswers == Null)
+                                                        {{$dAnswers[$keyDND] = ' '}}
+                                                    @endif
+                                                    @if (!array_key_exists($keyDND, $dAnswers))
+                                                    {{$dAnswers[$keyDND] = ' '}}
+                                                    @endif
+
+                                                   @if ($keyDND !== array_key_last($dQuestions))
+                                                        @if($dAnswers[$keyDND] == $dCAnswers[$keyDND])
+                                                             {!! $dQuestion !!}<span style="color: green">{!! ' '.$dAnswers[$keyDND] !!}</span>
+                                                           <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 48 48" width="48px" height="48px"><path fill="#c8e6c9" d="M36,42H12c-3.314,0-6-2.686-6-6V12c0-3.314,2.686-6,6-6h24c3.314,0,6,2.686,6,6v24C42,39.314,39.314,42,36,42z"/><path fill="#4caf50" d="M34.585 14.586L21.014 28.172 15.413 22.584 12.587 25.416 21.019 33.828 37.415 17.414z"/></svg>
+                                                       @else
+                                                            {!! $dQuestion !!}<span style="color: red">{!!' '.$dAnswers[$keyDND] !!}</span>
+                                                           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
+                                                       @endif
                                                    @else
-                                                        {!! $dQuestion !!}<span style="color: red">{!!' '.$dAnswers[$keyDND] !!}</span>
-                                                       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"/></svg>
+                                                       {!! $dQuestion !!}
                                                    @endif
-                                               @else
-                                                   {!! $dQuestion !!}
-                                               @endif
-                                           @endforeach
-                                       </p>
-                                        <span style="font-size: x-large!important;"> Correct Answer</span>
-                                        <p style="font-size: xx-large!important;">
-                                            @foreach($dQuestions as $keyDND => $dQuestion)
+                                               @endforeach
+                                                </p>
+                                            <span style="font-size: x-large!important;"> Correct Answer</span>
+                                                <p style="font-size: xx-large!important;">
+                                                    @foreach($dQuestions as $keyDND => $dQuestion)
 
-                                                @if ($keyDND !== array_key_last($dQuestions))
-                                                    {{$dQuestion}}{{' '.$dCAnswers[$keyDND]}}
-                                                @else
-                                                    {{$dQuestion}}
-                                                @endif
-                                            @endforeach
-                                        </p>
-
+                                                        @if ($keyDND !== array_key_last($dQuestions))
+                                                            {{$dQuestion}}<span style="color: green">{{' '.$dCAnswers[$keyDND]}}</span>
+                                                        @else
+                                                            {{$dQuestion}}
+                                                        @endif
+                                                    @endforeach
+                                                </p>
+                                        </div>
+                                        <div class="btnDiv pb-3">
+                                            @if($key == 0)
+                                                <a class="btn btn-success btnNext float-right">Next</a>
+                                            @elseif(count($mockTest->mockTestItems)== $key-1)
+                                                <a class="btn btn-danger btnPrevious float-right">Previous</a>
+                                            @else
+                                                <a class="btn btn-danger btnPrevious float-right">Previous</a>
+                                                <a class="btn btn-success btnNext float-right">Next</a>
+                                            @endif
+                                            <a href="{{route('student.dashboard')}}" class="btn btn-primary float-right" > Dashboard</a>
+                                        </div>
                                     </div>
                             @endif
+
                             @endforeach
-
-
-
-                                <a href="{{route('student.dashboard')}}" class="btn  btn-primary float-right" > Dashboard</a>
+{{--                                <a href="{{route('student.dashboard')}}" class="btn btn-primary float-right" > Dashboard</a>--}}
                         </div>
 
-{{--                    </form>--}}
+
                 </div>
 
 
             </div>
-
-
 
         </div>
 
@@ -311,12 +339,7 @@
 @section('js-customization')
     <!-- BEGIN PAGE LEVEL CUSTOM SCRIPTS -->
     <script src= {{ asset("js/theme/plugins/perfect-scrollbar/perfect-scrollbar.min.js") }}></script>
-    <script src={{ asset("js/theme/plugins/table/datatable/datatables.js") }}></script>
-    <!-- NOTE TO Use Copy CSV Excel PDF Print Options You Must Include These Files  -->
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/dataTables.buttons.min.js")}}></script>
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/jszip.min.js")}}></script>
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/buttons.html5.min.js")}}></script>
-    <script src={{asset("js/theme/plugins/table/datatable/button-ext/buttons.print.min.js")}}></script>
+
 
     <!-- BEGIN THEME GLOBAL STYLE -->
     <script src={{asset("js/theme/js/scrollspyNav.js")}}></script>
@@ -324,7 +347,7 @@
     <script src={{asset("js/theme/plugins/sweetalerts/custom-sweetalert.js")}}></script>
     <!-- END THEME GLOBAL STYLE -->
     <!-- END PAGE LEVEL CUSTOM SCRIPTS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>--}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src={{asset("js/jquery.countdownTimer.js")}}></script>
 
@@ -373,66 +396,17 @@
         }
 
     </script>
-
     <script>
-        {{--var count = {{$questions[0]->id}};--}}
-        {{--jQuery(".next").click(function(){--}}
-        {{--    var myclass = jQuery(this).parent().parent().attr('id');--}}
-        {{--    console.log(myclass);--}}
-        {{--    jQuery("#"+myclass).addClass( "hide" );--}}
-        {{--    var quesidname = 'question';--}}
-        {{--    count = count + 1;--}}
-        {{--    count1 = count - 1;--}}
-        {{--    jQuery("#"+quesidname+count1).removeClass("show").addClass( "hide" );--}}
-        {{--    jQuery("#"+quesidname+count).addClass( "show" );--}}
+        $(document).ready(function() {
+            $('.btnNext').click(function() {
+                $('.nav-tabs .active').parent().next('li').find('a').trigger('click')
+            });
 
-        {{--    //$(myclass).addClass('id');--}}
-        {{--    console.log(myclass);--}}
-        {{--});--}}
-
-    </script>
-{{--    <script>--}}
-{{--        var timeleft = 10;--}}
-{{--        var downloadTimer = setInterval(function(){--}}
-{{--            if(timeleft <= 0){--}}
-{{--                clearInterval(downloadTimer);--}}
-{{--            }--}}
-{{--            document.getElementById("progressBar").value = 10 - timeleft;--}}
-{{--            timeleft -= 1;--}}
-{{--        }, 1000);--}}
-{{--    </script>--}}
-
-    <script>
-        // $('.btnNext').click(function(){
-        //     $('.nav-tabs > .active').next('li').find('a').trigger('click');
-        // });
-        //
-        // $('.btnPrevious').click(function(){
-        //     $('.nav-tabs > .active').prev('li').find('a').trigger('click');
-        // });
-        $('.btnNext').click(function() {
-            $('.nav-tabs .active').parent().next('li').find('a').trigger('click');
-        });
-
-        $('.btnPrevious').click(function() {
-            $('.nav-tabs .active').parent().prev('li').find('a').trigger('click');
+            $('.btnPrevious').click(function() {
+                $('.nav-tabs .active').parent().prev('li').find('a').trigger('click');
+            });
         });
     </script>
-{{--    <script>--}}
-{{--        $(function(){--}}
-{{--            $("#hm_timer").countdowntimer({--}}
-{{--                minutes : 45,--}}
-{{--                size : "lg",--}}
-{{--                timeSeparator : ":",--}}
-{{--                timeUp : timeisUp--}}
-{{--            })--}}
-
-{{--            function timeisUp() {--}}
-{{--                //Code to be executed when timer expires.--}}
-{{--                document.getElementById("questionForm").submit();--}}
-{{--            }--}}
-{{--        });--}}
-{{--    </script>--}}
 
 
 @endsection

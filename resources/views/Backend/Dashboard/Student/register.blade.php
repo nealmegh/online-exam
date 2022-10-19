@@ -15,12 +15,17 @@
     <!-- END GLOBAL MANDATORY STYLES -->
     <link rel="stylesheet" type="text/css" href={{ asset("css/theme/forms/theme-checkbox-radio.css") }}>
     <link rel="stylesheet" type="text/css" href={{ asset("css/theme/forms/switches.css") }}>
+    <style>
+        .form-form-custom label{
+            font-size: 18px !important;
+        }
+    </style>
 </head>
 <body class="form">
 
 
 <div class="form-container outer">
-    <div class="form-form">
+    <div class="form-form form-form-custom">
         <div class="form-form-wrap">
             <div class="form-container">
                 <div class="form-content">
