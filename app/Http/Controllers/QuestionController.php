@@ -237,6 +237,13 @@ class QuestionController extends Controller
             {
                 return redirect()->back()->withInput()->with('message', 'Number of Answers are not Correct');
             }
+            $c = $request->correct_answer;
+            $c = explode(' ', $c);
+            $correct_answer = json_encode($c);
+            if (count($questions)-1 != count($c))
+            {
+                return redirect()->back()->withInput()->with('message', 'Number of Question and Correct Answer are not correct.');
+            }
             $data = [
                 'text' => json_encode($questions),
                 'category_id' => $request->category_id,
@@ -244,15 +251,12 @@ class QuestionController extends Controller
                 'number_answers' => count($questions)-1,
                 'mark_distribution' => 1,
             ];
-            $question = Question::create($data);
-            $c = $request->correct_answer;
-            $c = explode(' ', $c);
-            $correct_answer = json_encode($c);
             $answerData = [
                 'text' => json_encode($answers),
                 'correct_answer' => $this->xtrim($correct_answer),
                 'question_id' => $question->id
             ];
+            Question::create($data);
             Answer::create($answerData);
         }
 
@@ -330,10 +334,20 @@ class QuestionController extends Controller
             {
                 $questions[] = $this->xtrim($questionArray['question']);
             }
-//            dd(count($questions)-count($answers) != 1);
+
             if (count($questions) >= count($answers))
             {
                 return redirect()->back()->withInput()->with('message', 'Number of Answers are not Correct');
+            }
+
+            $c = $request->correct_answer;
+            $c = explode(' ', $c);
+            $correct_answer = json_encode($c);
+//            dd(count($questions)-1, count($c));
+            if (count($questions)-1 != count($c))
+            {
+//                dd('no');
+                return redirect()->back()->withInput()->with('message', 'Number of Question and Correct Answer are not correct.');
             }
             $data = [
                 'text' => json_encode($questions),
@@ -342,18 +356,16 @@ class QuestionController extends Controller
                 'number_answers' => count($questions),
                 'mark_distribution' => 1,
             ];
-            $question->update($data);
-            $c = $request->correct_answer;
-            $c = explode(' ', $c);
-            $correct_answer = json_encode($c);
+
             $answerData = [
                 'text' => json_encode($answers),
                 'correct_answer' => $this->xtrim($correct_answer),
                 'question_id' => $question->id
             ];
+            $question->update($data);
             $question->answers->update($answerData);
         }
-
+//        dd('jho');
         return redirect()->route('questions.index')->with('message', 'Question Updated');
     }
 

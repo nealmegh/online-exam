@@ -212,7 +212,7 @@
                                             @foreach($dQuestions as $keyDND => $dQuestion)
 
                                                 @if ($keyDND !== array_key_last($dQuestions))
-                                                    {{$dQuestion}}<span style="color:green;">{{' '.$dCAnswers[$keyDND]}}</span>
+                                                    {{$dQuestion}}<span style="color:green;">{{(array_key_exists($keyDND, $dCAnswers)) ? ' '.$dCAnswers[$keyDND] : ' '}}</span>
                                                 @else
                                                     {{$dQuestion}}
                                                 @endif

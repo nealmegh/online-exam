@@ -140,7 +140,7 @@
                                 <td>{{$question->isPro}}</td>
 
                                 <td>
-                                    <a  href="{{route('questions.edit', $question->id). '?' . http_build_query(['type_id' => $question->type])}}" class="btn btn-primary" title="Edit Booking" >
+                                    <a  href="{{route('questions.edit', $question->id). '?' . http_build_query(['type_id' => $question->type])}}" class="btn btn-primary" title="Edit Question" >
                                         <i class="far fa-edit"></i>
                                     </a>
                                     <a id="{{$question->id}}" class="btn btn-danger delete-booking" data-value="{{$question->id}}" onClick="destroy_question(this.id)" >

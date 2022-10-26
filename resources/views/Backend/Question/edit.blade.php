@@ -112,14 +112,21 @@
                                             <tr>
                                                 <td><input type="text" name="addMoreQuestionFields[{{$qkey}}][question]" value="{{$dQuestion}}" placeholder="Enter Answer" class="form-control" />
                                                 </td>
-                                                <td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td>
+                                                @if(array_key_first($questions) == $qkey)
+                                                    <td>
+                                                    <button type="button" name="add" id="dynamic-arq" class="btn btn-outline-primary">+</button>
+                                                    </td>
+                                                @else
+                                                    <td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button>
+                                                    </td>
+                                                @endif
                                             </tr>
                                         @endforeach
-                                        <tr>
-                                            <td><input type="text" name="addMoreQuestionFields[{{$qkey+1}}][question]" placeholder="Enter Question" class="form-control" />
-                                            </td>
-                                            <td><button type="button" name="add" id="dynamic-arq" class="btn btn-outline-primary">+</button></td>
-                                        </tr>
+{{--                                        <tr>--}}
+{{--                                            <td><input type="text" name="addMoreQuestionFields[{{$qkey+1}}][question]" placeholder="Enter Question" class="form-control" />--}}
+{{--                                            </td>--}}
+{{--                                            <td><button type="button" name="add" id="dynamic-arq" class="btn btn-outline-primary">+</button></td>--}}
+{{--                                        </tr>--}}
                                     </table>
                                 </div>
                                 @endif
@@ -135,14 +142,16 @@
                                         <tr>
                                             <td><input type="text" name="addMoreInputFields[{{$anskey}}][subject]" value="{{$answer}}" placeholder="Enter Answer" class="form-control" />
                                             </td>
-                                            <td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td>
+                                            @if(array_key_first($answers) == $anskey)
+                                                <td><button type="button" name="add" id="dynamic-ar" class="btn btn-outline-primary">+</button></td>
+                                            @else
+                                                <td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button>
+                                                </td>
+                                            @endif
+{{--                                            <td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td>--}}
                                         </tr>
                                     @endforeach
-                                    <tr>
-                                        <td><input type="text" name="addMoreInputFields[{{$anskey+1}}][subject]" placeholder="Enter Answer" class="form-control" />
-                                        </td>
-                                        <td><button type="button" name="add" id="dynamic-ar" class="btn btn-outline-primary">+</button></td>
-                                    </tr>
+
                                 </table>
 
                                 <div class="form-group mb-4">
@@ -198,7 +207,8 @@
     <!-- END PAGE LEVEL CUSTOM SCRIPTS -->
 
     <script>
-        var i = 0;
+        var i = @json($anskey)
+        // var i = 0;
         $("#dynamic-ar").click(function () {
             ++i;
             $("#dynamicAddRemove").append('<tr><td><input type="text" name="addMoreInputFields[' + i +
@@ -220,7 +230,8 @@
     </script>
 
     <script>
-        var i = 0;
+        var i = @json($qkey)
+        // var i = 0;
         $("#dynamic-arq").click(function () {
             ++i;
             $("#dynamicAddRemoveQuestion").append('<tr><td><input type="text" name="addMoreQuestionFields[' + i +
