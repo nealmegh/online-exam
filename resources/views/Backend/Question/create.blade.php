@@ -90,7 +90,9 @@
                                             <th></th>
                                         </tr>
                                         <tr>
-                                            <td><input type="text" name="addMoreQuestionFields[0][question]" placeholder="Enter Question" class="form-control" />
+                                            <td>
+{{--                                                <input type="text" name="addMoreQuestionFields[0][question]" placeholder="Enter Question" class="form-control" />--}}
+                                                <textarea name="addMoreQuestionFields[0][question]" placeholder="Enter Question" class="form-control"></textarea>
                                             </td>
                                             <td><button type="button" name="add" id="dynamic-arq" class="btn btn-outline-primary">+</button></td>
                                         </tr>
@@ -179,10 +181,16 @@
 
     <script>
         var i = 0;
+        // $("#dynamic-arq").click(function () {
+        //     ++i;
+        //     $("#dynamicAddRemoveQuestion").append('<tr><td><input type="text" name="addMoreQuestionFields[' + i +
+        //         '][question]" placeholder="Enter Part Question" class="form-control" /></td><td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td></tr>'
+        //     );
+        // });
         $("#dynamic-arq").click(function () {
             ++i;
-            $("#dynamicAddRemoveQuestion").append('<tr><td><input type="text" name="addMoreQuestionFields[' + i +
-                '][question]" placeholder="Enter Part Question" class="form-control" /></td><td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td></tr>'
+            $("#dynamicAddRemoveQuestion").append('<tr><td><textarea name="addMoreQuestionFields[' + i +
+                '][question]" placeholder="Enter Part Question" class="form-control" ></textarea></td><td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td></tr>'
             );
         });
         $(document).on('click', '.remove-input-field-question', function () {

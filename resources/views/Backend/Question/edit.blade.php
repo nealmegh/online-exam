@@ -110,7 +110,9 @@
                                         @endphp
                                         @foreach($questions as $qkey => $dQuestion)
                                             <tr>
-                                                <td><input type="text" name="addMoreQuestionFields[{{$qkey}}][question]" value="{{$dQuestion}}" placeholder="Enter Answer" class="form-control" />
+                                                <td>
+{{--                                                    <input type="text" name="addMoreQuestionFields[{{$qkey}}][question]" value="{{$dQuestion}}" placeholder="Enter Question" class="form-control" />--}}
+                                                    <textarea name="addMoreQuestionFields[{{$qkey}}][question]" placeholder="Enter Question" class="form-control">{{$dQuestion}}</textarea>
                                                 </td>
                                                 @if(array_key_first($questions) == $qkey)
                                                     <td>
@@ -140,7 +142,8 @@
                                     @endphp
                                     @foreach($answers as $anskey => $answer)
                                         <tr>
-                                            <td><input type="text" name="addMoreInputFields[{{$anskey}}][subject]" value="{{$answer}}" placeholder="Enter Answer" class="form-control" />
+                                            <td>
+                                                <input type="text" name="addMoreInputFields[{{$anskey}}][subject]" value="{{$answer}}" placeholder="Enter Answer" class="form-control" />
                                             </td>
                                             @if(array_key_first($answers) == $anskey)
                                                 <td><button type="button" name="add" id="dynamic-ar" class="btn btn-outline-primary">+</button></td>
@@ -234,8 +237,15 @@
         // var i = 0;
         $("#dynamic-arq").click(function () {
             ++i;
-            $("#dynamicAddRemoveQuestion").append('<tr><td><input type="text" name="addMoreQuestionFields[' + i +
-                '][question]" placeholder="Enter Part Question" class="form-control" /></td><td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td></tr>'
+            // $("#dynamicAddRemoveQuestion").append('<tr><td>' +
+            //     '<input type="text" name="addMoreQuestionFields[' + i +
+            //     '][question]" placeholder="Enter Part Question" class="form-control" />' +
+            //     '</td><td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td></tr>'
+            // );
+            $("#dynamicAddRemoveQuestion").append('<tr><td>' +
+                '<textarea type="text" name="addMoreQuestionFields[' + i +
+                '][question]" placeholder="Enter Part Question" class="form-control" ></textarea>' +
+                '</td><td><button type="button" class="btn btn-outline-danger remove-input-field-question">Delete</button></td></tr>'
             );
         });
         $(document).on('click', '.remove-input-field-question', function () {
