@@ -251,12 +251,12 @@ class QuestionController extends Controller
                 'number_answers' => count($questions)-1,
                 'mark_distribution' => 1,
             ];
+            $question = Question::create($data);
             $answerData = [
                 'text' => json_encode($answers),
                 'correct_answer' => $this->xtrim($correct_answer),
                 'question_id' => $question->id
             ];
-            Question::create($data);
             Answer::create($answerData);
         }
 
