@@ -152,7 +152,7 @@
             })
 
             swalWithBootstrapButtons({
-                title: 'Are you sure you want to delete '+carName+' car type?',
+                title: 'Are you sure you want to delete User '+carName+'?',
                 text: "You won't be able to revert this!",
                 type: 'warning',
                 showCancelButton: true,
@@ -163,7 +163,7 @@
                 showLoaderOnConfirm: true,
                 preConfirm: ()=>{
                     $.ajax({
-                        url: '/admin/cars/delete/'+car_id,
+                        url: '/admin/users/delete/'+car_id,
                         method: 'POST',
                         data:{"_token": "{{ csrf_token() }}"},
                         success: function(resp)
@@ -178,7 +178,7 @@
                     swalWithBootstrapButtons(
                         {
                             title: 'Deleted!',
-                            text: 'The car type has been deleted.',
+                            text: 'The user type has been deleted.',
                             type: 'success'
                         }
                     ).then(function (result){

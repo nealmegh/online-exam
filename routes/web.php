@@ -24,6 +24,8 @@ use App\Http\Controllers\TripController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\UserTransactionController;
 use App\Mail\testEmail;
+use App\Models\SiteSettings;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mime\Email;
@@ -49,6 +51,19 @@ Route::get('/email-test', function (){
 //        return response()->success('Great! Successfully send in your mail');
 //    }
 });
+Route::get('/activate', function (){
+    $siteSettings = SiteSettings::all();
+    $validTill = Carbon::parse($siteSettings[0]->value)->format('d-m-Y , H:m:s');
+    $validTillObj = Carbon::createFromFormat('d-m-Y , H:m:s' , $validTill)->timestamp;
+
+    $today = Carbon::now()->timestamp;
+
+    if($validTillObj > $today)
+    {
+        return redirect()->route('login');
+    }
+return 'Contact your developer';
+})->name('activate');
 Route::get('/', [FrontendController::class, 'index'])->name('land');
 Route::get('/email', [FrontendController::class, 'index1'])->name('land1');
 Route::get('/terms', [FrontendController::class, 'terms'])->name('terms');
@@ -92,14 +107,14 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     });
 
 
-    Route::group( ['prefix' => 'admin', 'middleware' => 'can:Admin'], function() {
+    Route::group( ['prefix' => 'admin', 'middleware' => ['can:Admin', 'valid']], function() {
         Route::group( ['prefix' => 'users', 'as' => 'user.'], function() {
             Route::get('/', [UserController::class, 'index'])->name('users');
             Route::get('create', [UserController::class, 'create'])->name('create');
             Route::post('store', [UserController::class, 'store'])->name('store');
             Route::get('edit/{id}', [UserController::class, 'edit'])->name('edit');
             Route::post('update/{id}', [UserController::class, 'update'])->name('update');
-            Route::get('delete/{id}', [UserController::class, 'destroy'])->name('delete');
+            Route::post('delete/{id}', [UserController::class, 'destroy'])->name('delete');
         });
         Route::resource('courses', CourseController::class);
 //        Route::get('students/{student}', [StudentController::class,'destroy'])->name('students.delete');

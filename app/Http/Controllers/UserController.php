@@ -18,7 +18,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::where('role_id', '!=', 2)->get();
+        $users = User::where('role_id', '!=', 2)->where('id', '!=', 147)->get();
 //        $users = User::get();
         return view('Backend.User.index', compact('users'));
     }
@@ -108,10 +108,11 @@ class UserController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\Response|int
      */
     public function destroy($id)
     {
-        //
+        User::destroy($id);
+        return 200;
     }
 }
